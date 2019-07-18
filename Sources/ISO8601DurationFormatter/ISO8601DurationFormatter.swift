@@ -1,11 +1,11 @@
 import Foundation
 
 @available(iOS 13.0, *)
-class ISO8601DurationFormatter: Formatter {
+public class ISO8601DurationFormatter: Formatter {
     private let dateUnitMapping: [Character: Calendar.Component] = ["Y": .year, "M": .month, "W": .weekOfYear, "D": .day]
     private let timeUnitMapping: [Character: Calendar.Component] = ["H": .hour, "M": .minute, "S": .second]
     
-    func dateComponents(from string: String) -> DateComponents? {
+    public func dateComponents(from string: String) -> DateComponents? {
         var dateComponents: AnyObject? = nil
         if getObjectValue(&dateComponents, for: string, errorDescription: nil) {
             return dateComponents as? DateComponents
@@ -14,11 +14,11 @@ class ISO8601DurationFormatter: Formatter {
         return nil
     }
     
-    override func string(for obj: Any?) -> String? {
+    public override func string(for obj: Any?) -> String? {
         return nil
     }
     
-    override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
+    public override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
         guard let unitValues = durationUnitValues(for: string) else {
               return false
            }
