@@ -1,15 +1,34 @@
 import XCTest
 @testable import ISO8601DurationFormatter
 
+@available(iOS 13.0, *)
 final class ISO8601DurationFormatterTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(ISO8601DurationFormatter().text, "Hello, World!")
+    var formatter: ISO8601DurationFormatter!
+    
+    override func setUp() {
+        formatter = ISO8601DurationFormatter()
     }
+    
+    func testParseMinute() {
+        let input = "PT40M"
+        let dateComponents = formatter.dateComponents(from: input)
+        
+        XCTAssertNotNil(dateComponents)
+        XCTAssertNotNil(dateComponents!.minute)
+        XCTAssertEqual(40, dateComponents!.minute!)
+    }
+    
+    func testParseHour() {
+            let input = "PT1H"
+            let dateComponents = formatter.dateComponents(from: input)
+            
+            XCTAssertNotNil(dateComponents)
+            XCTAssertNotNil(dateComponents!.hour)
+            XCTAssertEqual(1, dateComponents!.hour!)
+        }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testParseMinute", testParseMinute),
+        ("testParseHour", testParseHour),
     ]
 }
