@@ -1,6 +1,6 @@
 # ISO8601DurationFormatter
 
-A formatter for converting ISO8601 durations to DateComponents.
+A formatter for converting [ISO 8601 durations](https://en.wikipedia.org/wiki/ISO_8601#Durations) to DateComponents.
 
 ## Installation
 
