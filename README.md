@@ -7,7 +7,7 @@ A formatter for converting [ISO 8601 durations](https://en.wikipedia.org/wiki/IS
 ### Swift Package Manager
 Add the following to your Package.swift file's dependencies:
 ```swift
-.package(url: "https://github.com/kkla320/ISO8601DurationFormatter.git", from: "1.0.0")
+.package(url: "https://github.com/kkla320/ISO8601DurationFormatter.git", from: "1.0.1")
 ```
 And then import wherever needed: `import ISO8601DurationFormatter`
 
