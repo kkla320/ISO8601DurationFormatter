@@ -64,16 +64,22 @@ public class ISO8601DurationFormatter: Formatter {
 
           let scanner = Scanner(string: string)
           while !scanner.isAtEnd {
-            guard let value = scanner.scanInt() else {
+            var value: Int = 0
+            guard scanner.scanInt(&value) else {
                 return nil
             }
             
-            guard let identifier = scanner.scanCharacters(from: identifiersSet) else {
+            var identifier: NSString?
+            guard scanner.scanCharacters(from: identifiersSet, into: &identifier) else {
                 return nil
             }
             
-             let unit = mapping[Character(identifier)]!
-             components.append((unit, value))
+            guard identifier != nil else {
+                return nil
+            }
+            
+            let unit = mapping[Character(identifier! as String)]!
+            components.append((unit, value))
           }
           return components
        }
