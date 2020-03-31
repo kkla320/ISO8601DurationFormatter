@@ -142,8 +142,16 @@ final class ISO8601DurationFormatterTests: XCTestCase {
         XCTAssertNotNil(dateComponents!.second)
         XCTAssertEqual(3, dateComponents!.second!)
     }
+    
+    func testDateComponentsToISO8601Duration() {
+        let dateComponents = DateComponents(calendar: nil, timeZone: nil, era: nil, year: 6, month: 2, day: 2, hour: 4, minute: 44, second: 22, nanosecond: nil, weekday: nil, weekdayOrdinal: nil, quarter: nil, weekOfMonth: nil, weekOfYear: 2, yearForWeekOfYear: nil)
+        let ISO8601DurationStr = dateComponents.toISO8601Duration()
+        
+        XCTAssertEqual(ISO8601DurationStr, "P6Y2M2W2DT4H44M22S")
+    }
 
     static var allTests = [
+        ("testDateComponentsToISO8601Duration", testDateComponentsToISO8601Duration),
         ("testParseComplete", testParseComplete),
         ("testParseDate", testParseDate),
         ("testParseYear", testParseYear),
