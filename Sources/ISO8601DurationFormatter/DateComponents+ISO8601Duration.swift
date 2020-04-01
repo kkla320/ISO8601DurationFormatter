@@ -9,7 +9,7 @@ import Foundation
 
 @available(iOS 7.0, *)
 extension DateComponents {
-    func toISO8601Duration() -> String {
+    public func toISO8601Duration() -> String {
         var result = "P"
         result.append("\(self.year ?? 0)Y")
         result.append("\(self.month ?? 0)M")
