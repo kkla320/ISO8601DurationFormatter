@@ -1,10 +1,28 @@
 import Foundation
 
+/**
+ A formatter that converts between durations specified by [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) values
+ */
 @available(iOS 13.0, *)
 public class ISO8601DurationFormatter: Formatter {
     private let dateUnitMapping: [Character: Calendar.Component] = ["Y": .year, "M": .month, "W": .weekOfYear, "D": .day]
     private let timeUnitMapping: [Character: Calendar.Component] = ["H": .hour, "M": .minute, "S": .second]
     
+    /**
+    Return a [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents) object created by parsing a given [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) string
+     
+    ```
+    let input = "PT40M30S"
+    let dateComponents = formatter.dateComponents(from: input)
+    if dateComponents != nil {
+        print(dateComponents!.minute) // 40
+        print(dateComponents!.seconds) // 30
+    }
+    ```
+     
+    - parameter string: A [String](https://developer.apple.com/documentation/swift/string) object that is parsed to generate the returned [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents) object.
+    - returns: A  [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents) object created by parsing `string`, or `nil` if string could not be parsed
+     */
     public func dateComponents(from string: String) -> DateComponents? {
         var dateComponents: AnyObject? = nil
         if getObjectValue(&dateComponents, for: string, errorDescription: nil) {
