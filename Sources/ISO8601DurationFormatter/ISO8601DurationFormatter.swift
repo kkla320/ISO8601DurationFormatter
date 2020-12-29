@@ -10,16 +10,16 @@ public class ISO8601DurationFormatter: Formatter {
     
     /**
     Return a [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents) object created by parsing a given [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) string
-     
+
     ```
     let input = "PT40M30S"
     let dateComponents = formatter.dateComponents(from: input)
-    if dateComponents != nil {
-        print(dateComponents!.minute) // 40
-        print(dateComponents!.seconds) // 30
+    if let dateComponents = dateComponents {
+        print(dateComponents.minute) // 40
+        print(dateComponents.seconds) // 30
     }
     ```
-     
+
     - parameter string: A [String](https://developer.apple.com/documentation/swift/string) object that is parsed to generate the returned [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents) object.
     - returns: A  [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents) object created by parsing `string`, or `nil` if string could not be parsed
      */
@@ -38,67 +38,67 @@ public class ISO8601DurationFormatter: Formatter {
     
     public override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
         guard let unitValues = durationUnitValues(for: string) else {
-              return false
-           }
+            return false
+        }
 
-           var components = DateComponents()
-           for (unit, value) in unitValues {
-              components.setValue(value, for: unit)
-           }
+        var components = DateComponents()
+        for (unit, value) in unitValues {
+            components.setValue(value, for: unit)
+        }
         obj?.pointee = components as AnyObject
         return true
     }
     
     private func durationUnitValues(for string: String) -> [(Calendar.Component, Int)]? {
-      guard string.hasPrefix("P") else {
-         return nil
-      }
+        guard string.hasPrefix("P") else {
+            return nil
+        }
 
-      let duration = String(string.dropFirst())
+        let duration = String(string.dropFirst())
 
-      guard let separatorRange = duration.range(of: "T") else {
-        return unitValuesWithMapping(for: duration, dateUnitMapping)
-      }
+        guard let separatorRange = duration.range(of: "T") else {
+            return unitValuesWithMapping(for: duration, dateUnitMapping)
+        }
 
-      let date = String(duration[..<separatorRange.lowerBound])
-      let time = String(duration[separatorRange.upperBound...])
+        let date = String(duration[..<separatorRange.lowerBound])
+        let time = String(duration[separatorRange.upperBound...])
 
         guard let dateUnits = unitValuesWithMapping(for: date, dateUnitMapping),
-            let timeUnits = unitValuesWithMapping(for: time, timeUnitMapping) else {
+              let timeUnits = unitValuesWithMapping(for: time, timeUnitMapping) else {
             return nil
-      }
+        }
 
-      return dateUnits + timeUnits
-   }
+        return dateUnits + timeUnits
+    }
     
     func unitValuesWithMapping(for string: String, _ mapping: [Character: Calendar.Component]) -> [(Calendar.Component, Int)]? {
-          if string.isEmpty {
-             return []
-          }
+        if string.isEmpty {
+            return []
+        }
 
-          var components: [(Calendar.Component, Int)] = []
+        var components: [(Calendar.Component, Int)] = []
 
-          let identifiersSet = CharacterSet(charactersIn: String(mapping.keys))
+        let identifiersSet = CharacterSet(charactersIn: String(mapping.keys))
 
-          let scanner = Scanner(string: string)
-          while !scanner.isAtEnd {
+        let scanner = Scanner(string: string)
+        while !scanner.isAtEnd {
             var value: Int = 0
             guard scanner.scanInt(&value) else {
                 return nil
             }
-            
-            var identifier: NSString?
-            guard scanner.scanCharacters(from: identifiersSet, into: &identifier) else {
+
+            var scannedIdentifier: NSString?
+            guard scanner.scanCharacters(from: identifiersSet, into: &scannedIdentifier) else {
                 return nil
             }
-            
-            guard identifier != nil else {
+
+            guard let identifier = scannedIdentifier as String? else {
                 return nil
             }
-            
-            let unit = mapping[Character(identifier! as String)]!
+
+            let unit = mapping[Character(identifier)]!
             components.append((unit, value))
-          }
-          return components
-       }
+        }
+        return components
+    }
 }
