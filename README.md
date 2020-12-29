@@ -9,7 +9,10 @@ Add the following to your Package.swift file's dependencies:
 ```swift
 .package(url: "https://github.com/kkla320/ISO8601DurationFormatter.git", from: "1.1.0")
 ```
-And then import wherever needed: `import ISO8601DurationFormatter`
+And then import wherever needed
+```swift
+import ISO8601DurationFormatter
+```
 
 ## Example
 
