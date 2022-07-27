@@ -5,6 +5,21 @@ import Foundation
  */
 @available(iOS 13.0, *)
 public class ISO8601DurationFormatter: Formatter {
+
+    public enum Error: Swift.Error, LocalizedError {
+        case fractionalValuesNotSupported
+        case description(message: String)
+
+        public var errorDescription: String? {
+            switch self {
+            case .fractionalValuesNotSupported:
+                return String(describing: self)
+            case .description(let message):
+                return message
+            }
+        }
+    }
+
     private let dateUnitMapping: [Character: Calendar.Component] = ["Y": .year, "M": .month, "W": .weekOfYear, "D": .day]
     private let timeUnitMapping: [Character: Calendar.Component] = ["H": .hour, "M": .minute, "S": .second]
     
@@ -23,10 +38,17 @@ public class ISO8601DurationFormatter: Formatter {
     - parameter string: A [String](https://developer.apple.com/documentation/swift/string) object that is parsed to generate the returned [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents) object.
     - returns: A  [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents) object created by parsing `string`, or `nil` if string could not be parsed
      */
-    public func dateComponents(from string: String) -> DateComponents? {
-        var dateComponents: AnyObject? = nil
-        if getObjectValue(&dateComponents, for: string, errorDescription: nil) {
+    public func dateComponents(from string: String) throws -> DateComponents? {
+        var dateComponents: AnyObject?
+        var errorDescription: NSString?
+        if getObjectValue(&dateComponents, for: string, errorDescription: &errorDescription) {
             return dateComponents as? DateComponents
+        }
+        if let errorDescription = errorDescription as? String {
+            if errorDescription == Error.fractionalValuesNotSupported.localizedDescription {
+                throw Error.fractionalValuesNotSupported
+            }
+            throw Error.description(message: errorDescription)
         }
         
         return nil
@@ -37,16 +59,21 @@ public class ISO8601DurationFormatter: Formatter {
     }
     
     public override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
-        guard let unitValues = durationUnitValues(for: string) else {
+        do {
+            guard let unitValues = try durationUnitValues(for: string) else {
+                return false
+            }
+
+            var components = DateComponents()
+            for (unit, value) in unitValues {
+                components.setValue(value, for: unit)
+            }
+            obj?.pointee = components as AnyObject
+            return true
+        } catch(let caughtError) {
+            error?.pointee = String(describing: caughtError) as NSString
             return false
         }
-
-        var components = DateComponents()
-        for (unit, value) in unitValues {
-            components.setValue(value, for: unit)
-        }
-        obj?.pointee = components as AnyObject
-        return true
     }
     
     private func durationUnitValues(for string: String) throws -> [(Calendar.Component, Int)]? {
@@ -89,11 +116,19 @@ public class ISO8601DurationFormatter: Formatter {
 
         let scanner = Scanner(string: string)
         while !scanner.isAtEnd {
-            var value: Int = 0
-            guard scanner.scanInt(&value) else {
+            var doubleVal: Double = 0
+            guard scanner.scanDouble(&doubleVal) else {
                 return nil
             }
 
+            // Throw an error for fractional representations as these are not suppored by `DateComponents`
+            let isInteger = floor(doubleVal) == doubleVal
+            guard isInteger else {
+                throw Error.fractionalValuesNotSupported
+            }
+
+            var value = Int(floor(doubleVal))
+            
             if isNegative {
                 value = -value
             }

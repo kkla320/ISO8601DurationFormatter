@@ -15,28 +15,28 @@ final class ISO8601DurationFormatterTests: XCTestCase {
     
     func testParseSecond() {
         let input = "PT5S"
-        let dateComponents = formatter.dateComponents(from: input)
+        let dateComponents = try? formatter.dateComponents(from: input)
 
         XCTAssertEqual(5, dateComponents?.second)
     }
     
     func testParseMinute() {
         let input = "PT40M"
-        let dateComponents = formatter.dateComponents(from: input)
+        let dateComponents = try? formatter.dateComponents(from: input)
 
         XCTAssertEqual(40, dateComponents?.minute)
     }
     
     func testParseHour() {
         let input = "PT1H"
-        let dateComponents = formatter.dateComponents(from: input)
+        let dateComponents = try? formatter.dateComponents(from: input)
 
         XCTAssertEqual(1, dateComponents?.hour)
     }
     
     func testParseTime() {
         let input = "PT1H40M45S"
-        let dateComponents = formatter.dateComponents(from: input)
+        let dateComponents = try? formatter.dateComponents(from: input)
 
         XCTAssertEqual(1, dateComponents?.hour)
         XCTAssertEqual(40, dateComponents?.minute)
@@ -45,35 +45,35 @@ final class ISO8601DurationFormatterTests: XCTestCase {
     
     func testParseDay() {
         let input = "P20D"
-        let dateComponents = formatter.dateComponents(from: input)
+        let dateComponents = try? formatter.dateComponents(from: input)
 
         XCTAssertEqual(20, dateComponents?.day)
     }
     
     func testParseWeek() {
         let input = "P1W"
-        let dateComponents = formatter.dateComponents(from: input)
+        let dateComponents = try? formatter.dateComponents(from: input)
 
         XCTAssertEqual(1, dateComponents?.weekOfYear)
     }
     
     func testParseMonth() {
         let input = "P3M"
-        let dateComponents = formatter.dateComponents(from: input)
+        let dateComponents = try? formatter.dateComponents(from: input)
 
         XCTAssertEqual(3, dateComponents?.month)
     }
     
     func testParseYear() {
         let input = "P6Y"
-        let dateComponents = formatter.dateComponents(from: input)
+        let dateComponents = try? formatter.dateComponents(from: input)
 
         XCTAssertEqual(6, dateComponents?.year)
     }
     
     func testParseDate() {
         let input = "P6Y3M1W20D"
-        let dateComponents = formatter.dateComponents(from: input)
+        let dateComponents = try? formatter.dateComponents(from: input)
 
         XCTAssertEqual(6, dateComponents?.year)
         XCTAssertEqual(3, dateComponents?.month)
@@ -83,7 +83,7 @@ final class ISO8601DurationFormatterTests: XCTestCase {
     
     func testParseComplete() {
         let input = "P6Y3M1W20DT3H40M3S"
-        let dateComponents = formatter.dateComponents(from: input)
+        let dateComponents = try? formatter.dateComponents(from: input)
 
         XCTAssertEqual(6, dateComponents?.year)
         XCTAssertEqual(3, dateComponents?.month)
@@ -94,9 +94,31 @@ final class ISO8601DurationFormatterTests: XCTestCase {
         XCTAssertEqual(3, dateComponents?.second)
     }
 
+    func testParseNegative() {
+        let input = "-P6Y3M1W20DT3H40M3S"
+        let dateComponents = try? formatter.dateComponents(from: input)
+
+        XCTAssertEqual(-6, dateComponents?.year)
+        XCTAssertEqual(-3, dateComponents?.month)
+        XCTAssertEqual(-1, dateComponents?.weekOfYear)
+        XCTAssertEqual(-20, dateComponents?.day)
+        XCTAssertEqual(-3, dateComponents?.hour)
+        XCTAssertEqual(-40, dateComponents?.minute)
+        XCTAssertEqual(-3, dateComponents?.second)
+    }
+
+    func testParseFractionFail() {
+        let input = "P1.5M"
+        do {
+            _ = try formatter.dateComponents(from: input)
+        } catch {
+            XCTAssertEqual(error.localizedDescription, "fractionalValuesNotSupported")
+        }
+    }
+
     func testParsingInvalidStringReturnsNil() {
         let input = "XXX"
-        let dateComponents = formatter.dateComponents(from: input)
+        let dateComponents = try? formatter.dateComponents(from: input)
 
         XCTAssertNil(dateComponents)
     }
