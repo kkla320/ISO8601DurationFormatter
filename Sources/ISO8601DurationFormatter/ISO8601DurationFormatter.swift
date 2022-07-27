@@ -55,6 +55,9 @@ public class ISO8601DurationFormatter: Formatter {
     }
     
     public override func string(for obj: Any?) -> String? {
+        if let dateComponents = obj as? DateComponents {
+            return dateComponents.toISO8601Duration()
+        }
         return nil
     }
     
