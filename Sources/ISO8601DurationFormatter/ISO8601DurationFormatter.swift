@@ -49,29 +49,36 @@ public class ISO8601DurationFormatter: Formatter {
         return true
     }
     
-    private func durationUnitValues(for string: String) -> [(Calendar.Component, Int)]? {
-        guard string.hasPrefix("P") else {
+    private func durationUnitValues(for string: String) throws -> [(Calendar.Component, Int)]? {
+        var duration = string.uppercased()
+        guard duration.hasPrefix("P") || duration.hasPrefix("-P") else {
             return nil
         }
 
-        let duration = String(string.dropFirst())
+        let isNegative = duration.hasPrefix("-")
+        if isNegative {
+            duration = String(duration.dropFirst())
+        }
+
+        // Drop initial `P`
+        duration = String(duration.dropFirst())
 
         guard let separatorRange = duration.range(of: "T") else {
-            return unitValuesWithMapping(for: duration, dateUnitMapping)
+            return try unitValuesWithMapping(for: duration, mapping: dateUnitMapping, isNegative: isNegative)
         }
 
         let date = String(duration[..<separatorRange.lowerBound])
         let time = String(duration[separatorRange.upperBound...])
 
-        guard let dateUnits = unitValuesWithMapping(for: date, dateUnitMapping),
-              let timeUnits = unitValuesWithMapping(for: time, timeUnitMapping) else {
+        guard let dateUnits = try unitValuesWithMapping(for: date, mapping: dateUnitMapping, isNegative: isNegative),
+              let timeUnits = try unitValuesWithMapping(for: time, mapping: timeUnitMapping, isNegative: isNegative) else {
             return nil
         }
 
         return dateUnits + timeUnits
     }
     
-    func unitValuesWithMapping(for string: String, _ mapping: [Character: Calendar.Component]) -> [(Calendar.Component, Int)]? {
+    func unitValuesWithMapping(for string: String, mapping: [Character: Calendar.Component], isNegative: Bool) throws -> [(Calendar.Component, Int)]? {
         if string.isEmpty {
             return []
         }
@@ -85,6 +92,10 @@ public class ISO8601DurationFormatter: Formatter {
             var value: Int = 0
             guard scanner.scanInt(&value) else {
                 return nil
+            }
+
+            if isNegative {
+                value = -value
             }
 
             var scannedIdentifier: NSString?
