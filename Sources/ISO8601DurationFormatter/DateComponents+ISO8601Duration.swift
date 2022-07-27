@@ -28,15 +28,39 @@ extension DateComponents {
     - returns: A [String](https://developer.apple.com/documentation/swift/string) object [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format using the current instance of [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents)
      */
     public func toISO8601Duration() -> String {
+        if allComponentsZero {
+            return "PT0S"
+        }
         var result = "P"
-        result.append("\(self.year ?? 0)Y")
-        result.append("\(self.month ?? 0)M")
-        result.append("\(self.weekOfYear ?? 0)W")
-        result.append("\(self.day ?? 0)D")
-        result.append("T")
-        result.append("\(self.hour ?? 0)H")
-        result.append("\(self.minute ?? 0)M")
-        result.append("\(self.second ?? 0)S")
+        result.appendIfNonZero(year, suffix: "Y")
+        result.appendIfNonZero(month, suffix: "M")
+        result.appendIfNonZero(weekOfYear, suffix: "W")
+        result.appendIfNonZero(day, suffix: "D")
+        if hour?.magnitude != 0 || minute?.magnitude != 0 || second?.magnitude != 0 {
+            result.append("T")
+            result.appendIfNonZero(hour, suffix: "H")
+            result.appendIfNonZero(minute, suffix: "M")
+            result.appendIfNonZero(second, suffix: "S")
+        }
         return result
     }
+
+    private var allComponentsZero: Bool {
+        let components = [year, month, weekOfYear, day, hour, minute, second]
+        return components.allSatisfy { $0?.magnitude ?? 0 == 0 }
+    }
+
+}
+
+private extension String {
+
+    mutating func appendIfNonZero(_ dateComponentValue: Int?, suffix letter: String) {
+        guard
+            let dateComponentValue = dateComponentValue,
+            dateComponentValue.magnitude > 0 else {
+            return
+        }
+        self.append("\(dateComponentValue)\(letter)")
+    }
+
 }
