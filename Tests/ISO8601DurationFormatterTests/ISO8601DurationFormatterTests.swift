@@ -13,114 +13,16 @@ final class ISO8601DurationFormatterTests: XCTestCase {
         formatter = nil
     }
     
-    func testParseSecond() {
-        let input = "PT5S"
-        let dateComponents = try? formatter.dateComponents(from: input)
-
-        XCTAssertEqual(5, dateComponents?.second)
-    }
-    
-    func testParseMinute() {
-        let input = "PT40M"
-        let dateComponents = try? formatter.dateComponents(from: input)
-
-        XCTAssertEqual(40, dateComponents?.minute)
-    }
-    
-    func testParseHour() {
-        let input = "PT1H"
-        let dateComponents = try? formatter.dateComponents(from: input)
-
-        XCTAssertEqual(1, dateComponents?.hour)
-    }
-    
-    func testParseTime() {
-        let input = "PT1H40M45S"
-        let dateComponents = try? formatter.dateComponents(from: input)
-
-        XCTAssertEqual(1, dateComponents?.hour)
-        XCTAssertEqual(40, dateComponents?.minute)
-        XCTAssertEqual(45, dateComponents?.second)
-    }
-    
-    func testParseDay() {
-        let input = "P20D"
-        let dateComponents = try? formatter.dateComponents(from: input)
-
-        XCTAssertEqual(20, dateComponents?.day)
-    }
-    
-    func testParseWeek() {
-        let input = "P1W"
-        let dateComponents = try? formatter.dateComponents(from: input)
-
-        XCTAssertEqual(1, dateComponents?.weekOfYear)
-    }
-    
-    func testParseMonth() {
-        let input = "P3M"
-        let dateComponents = try? formatter.dateComponents(from: input)
-
-        XCTAssertEqual(3, dateComponents?.month)
-    }
-    
-    func testParseYear() {
-        let input = "P6Y"
-        let dateComponents = try? formatter.dateComponents(from: input)
-
-        XCTAssertEqual(6, dateComponents?.year)
-    }
-    
-    func testParseDate() {
-        let input = "P6Y3M1W20D"
-        let dateComponents = try? formatter.dateComponents(from: input)
-
-        XCTAssertEqual(6, dateComponents?.year)
-        XCTAssertEqual(3, dateComponents?.month)
-        XCTAssertEqual(1, dateComponents?.weekOfYear)
-        XCTAssertEqual(20, dateComponents?.day)
-    }
-    
-    func testParseComplete() {
-        let input = "P6Y3M1W20DT3H40M3S"
-        let dateComponents = try? formatter.dateComponents(from: input)
-
-        XCTAssertEqual(6, dateComponents?.year)
-        XCTAssertEqual(3, dateComponents?.month)
-        XCTAssertEqual(1, dateComponents?.weekOfYear)
-        XCTAssertEqual(20, dateComponents?.day)
-        XCTAssertEqual(3, dateComponents?.hour)
-        XCTAssertEqual(40, dateComponents?.minute)
-        XCTAssertEqual(3, dateComponents?.second)
-    }
-
-    func testParseNegative() {
-        let input = "-P6Y3M1W20DT3H40M3S"
-        let dateComponents = try? formatter.dateComponents(from: input)
-
-        XCTAssertEqual(-6, dateComponents?.year)
-        XCTAssertEqual(-3, dateComponents?.month)
-        XCTAssertEqual(-1, dateComponents?.weekOfYear)
-        XCTAssertEqual(-20, dateComponents?.day)
-        XCTAssertEqual(-3, dateComponents?.hour)
-        XCTAssertEqual(-40, dateComponents?.minute)
-        XCTAssertEqual(-3, dateComponents?.second)
-    }
-
-    func testParseFractionFail() {
-        let input = "P1.5M"
-        do {
-            _ = try formatter.dateComponents(from: input)
-        } catch {
-            XCTAssertEqual(error.localizedDescription, "fractionalValuesNotSupported")
-        }
-    }
-
-    func testParsingInvalidStringReturnsNil() {
-        let input = "XXX"
-        let dateComponents = try? formatter.dateComponents(from: input)
-
-        XCTAssertNil(dateComponents)
+    func test_getObjectValue() {
+        let input = "5M"
+        
+        var object: AnyObject?
+        var error: NSString?
+        let didSucceed = formatter.getObjectValue(&object, for: input, errorDescription: &error)
+        
+        XCTAssertFalse(didSucceed)
+        XCTAssertNil(object)
+        XCTAssertEqual(DateComponents.ISO8601ConversionErrors.prefixMissing.description, error as? String)
     }
     
     func testDateComponentsToISO8601Duration() {
@@ -129,18 +31,4 @@ final class ISO8601DurationFormatterTests: XCTestCase {
         
         XCTAssertEqual(ISO8601DurationStr, "P6Y2M2W2DT4H44M22S")
     }
-
-    static var allTests = [
-        ("testDateComponentsToISO8601Duration", testDateComponentsToISO8601Duration),
-        ("testParseComplete", testParseComplete),
-        ("testParseDate", testParseDate),
-        ("testParseYear", testParseYear),
-        ("testParseMonth", testParseMonth),
-        ("testParseWeek", testParseWeek),
-        ("testParseDay", testParseDay),
-        ("testParseTime", testParseTime),
-        ("testParseSecond", testParseSecond),
-        ("testParseMinute", testParseMinute),
-        ("testParseHour", testParseHour),
-    ]
 }
