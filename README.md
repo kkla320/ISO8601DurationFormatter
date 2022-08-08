@@ -19,7 +19,6 @@ import ISO8601DurationFormatter
 ### Using ISO8601DurationFormatter
 
 #### Converting a string to DateComponents
-
 ```swift
 let input = "PT40M"
 let dateComponents = try formatter.dateComponents(from: input)
@@ -27,7 +26,6 @@ print(dateComponents.minute) // 40
 ```
 
 #### Converting DateComponents to string
-
 ```swift
 let dateComponents = DateComponents(year: 6,
                                     month: 2,
@@ -43,14 +41,19 @@ print(iso8601DurationString) // P6Y2M2W2DT4H44M22S
 ### Using extension methods
 
 #### Converting a string to DateComponents
-
 ```swift
 let dateComponents = try DateComponents(iso8601DurationString: "PT40M")
 print(dateComponents.minute) // 40
 ```
 
-#### Converting DateComponents to string
+You can also use negative durations as defined by [ISO 8601-2:2019](https://www.iso.org/standard/70908.html).
+```swift
+let dateComponents = try DateComponents(iso8601DurationString: "-PT40M")
+print(dateComponents.minute) // -40
+```
+Be aware, that this is defined in an extension of the standard. Other libaries could not work with negative values.
 
+#### Converting DateComponents to string
 ```swift
 let dateComponents = DateComponents(year: 6,
                                     month: 2,
