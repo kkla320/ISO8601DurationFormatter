@@ -34,4 +34,4 @@ jobs:
     - name: Deploy GitHub Pages site
       uses: actions/deploy-pages@v2.0.1
       with:
-        token: ${{ github.token }}
+        token: ${{ secrets.GITHUB_TOKEN }}
