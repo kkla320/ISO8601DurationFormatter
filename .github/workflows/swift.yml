@@ -32,9 +32,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Generate documentation
       run: | 
-        swift package \ 
-          --allow-writing-to-directory ./docs \
-          generate-documentation \
+        swift package --allow-writing-to-directory ./docs generate-documentation \
           --target ISO8601DurationFormatter \
           --output-path ./docs \
           --hosting-base-path ISO8601DurationFormatter \
