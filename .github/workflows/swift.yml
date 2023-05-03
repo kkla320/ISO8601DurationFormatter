@@ -4,7 +4,9 @@
 name: Swift
 
 on:
-  workflow_dispatch
+  push:
+    branches:
+    - DoccWorkflow
 
 jobs:
   build:
