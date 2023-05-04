@@ -1,0 +1,48 @@
+# This workflow will build a Swift project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
+
+name: Swift
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+on:
+  push:
+    branches:
+    - DoccWorkflow
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: swift build -v
+    - name: Run tests
+      run: swift test -v
+      
+  generate-documentation:
+    needs: build
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Generate documentation
+      run: | 
+        swift package --allow-writing-to-directory ./docs generate-documentation \
+          --disable-indexing \
+          --target ISO8601DurationFormatter \
+          --output-path ./docs \
+          --hosting-base-path ISO8601DurationFormatter \
+          --transform-for-static-hosting
+    - name: Upload GitHub Pages artifact
+      uses: actions/upload-pages-artifact@v1.0.8
+      with:
+        path: ./docs
+    - name: Deploy GitHub Pages site
+      uses: actions/deploy-pages@v2.0.1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
