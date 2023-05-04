@@ -33,6 +33,7 @@ jobs:
     - name: Generate documentation
       run: | 
         swift package --allow-writing-to-directory ./docs generate-documentation \
+          --disable-indexing \
           --target ISO8601DurationFormatter \
           --output-path ./docs \
           --hosting-base-path ISO8601DurationFormatter \
