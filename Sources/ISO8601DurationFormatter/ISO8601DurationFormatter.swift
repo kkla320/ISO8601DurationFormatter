@@ -4,7 +4,7 @@ import Foundation
 @available(iOS 13.0, *)
 public class ISO8601DurationFormatter: Formatter {
     /// Defines if zero or nil values should be excluded from the resulting string
-    public var omitZeroOrNilValues: Bool = false
+    public var emitZeroOrNilValues: Bool = false
     
     /// Return a [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents) object created by parsing a given [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) string
     ///
@@ -40,7 +40,7 @@ public class ISO8601DurationFormatter: Formatter {
     /// - Parameter dateComponents: A [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents) object that is parsed to create a a [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) string.
     /// - Returns: A [String](https://developer.apple.com/documentation/swift/string) object [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format using the current instance of [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents)
     public func string(from dateComponents: DateComponents) -> String {
-        return dateComponents.toISO8601Duration(omitZeroOrNilValues: omitZeroOrNilValues)
+        return dateComponents.toISO8601Duration(emitZeroOrNilValues: emitZeroOrNilValues)
     }
     
     /// Return a [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents) object created by parsing a given [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) string. If the parameter obj is not a string, this method returns nil.
@@ -56,7 +56,7 @@ public class ISO8601DurationFormatter: Formatter {
     /// - Throws: DateComponents.ISO8601ConversionErrors if parsing does not work.
     public override func string(for obj: Any?) -> String? {
         if let dateComponents = obj as? DateComponents {
-            return dateComponents.toISO8601Duration(omitZeroOrNilValues: omitZeroOrNilValues)
+            return dateComponents.toISO8601Duration(emitZeroOrNilValues: emitZeroOrNilValues)
         }
         return nil
     }
