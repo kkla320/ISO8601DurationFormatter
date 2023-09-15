@@ -67,7 +67,7 @@ let ISO8601DurationString = dateComponents.toISO8601Duration()
 print(ISO8601DurationString) // P6Y2M2W2DT4H44M22S
 ```
 
-You can also configure the behaviour of `toISO8601Duration` with the `emitZeroOrNilValues` parameter
+You can also configure the behaviour of `toISO8601Duration` with the `omitZeroOrNilValues` parameter
 
 ```swift
 let dateComponents = DateComponents(year: 0,
@@ -78,7 +78,7 @@ let dateComponents = DateComponents(year: 0,
                                     second: nil,
                                     weekOfYear: 2)
 
-let ISO8601DurationString = dateComponents.toISO8601Duration(emitZeroOrNilValues: true)
+let ISO8601DurationString = dateComponents.toISO8601Duration(omitZeroOrNilValues: true)
 print(ISO8601DurationString) // P2W2DT4H44M
 ```
 

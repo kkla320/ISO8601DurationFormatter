@@ -49,7 +49,7 @@ final class DateComponentsTests: XCTestCase {
         XCTAssertEqual(ISO8601DurationStr, "P0Y0M0W0DT0H0M0S")
     }
     
-    func test_toISO8601Duration_dropReturnEmptyDurationString_ifEmitZeroValuesIsTrueAndAllComponentsAreZero() {
+    func test_toISO8601Duration_dropReturnEmptyDurationString_ifOmitZeroValuesIsTrueAndAllComponentsAreZero() {
         let dateComponents = DateComponents(
             year: 0,
             month: 0,
@@ -59,12 +59,12 @@ final class DateComponentsTests: XCTestCase {
             second: 0,
             weekOfYear: 0
         )
-        let ISO8601DurationStr = dateComponents.toISO8601Duration(emitZeroOrNilValues: true)
+        let ISO8601DurationStr = dateComponents.toISO8601Duration(omitZeroOrNilValues: true)
         
         XCTAssertEqual(ISO8601DurationStr, "PT0S")
     }
     
-    func test_toISO8601Duration_dropReturnEmptyDurationString_ifEmitZeroValuesIsTrueAndAllComponentsAreNil() {
+    func test_toISO8601Duration_dropReturnEmptyDurationString_ifOmitZeroValuesIsTrueAndAllComponentsAreNil() {
         let dateComponents = DateComponents(
             year: nil,
             month: nil,
@@ -74,12 +74,12 @@ final class DateComponentsTests: XCTestCase {
             second: nil,
             weekOfYear: nil
         )
-        let ISO8601DurationStr = dateComponents.toISO8601Duration(emitZeroOrNilValues: true)
+        let ISO8601DurationStr = dateComponents.toISO8601Duration(omitZeroOrNilValues: true)
         
         XCTAssertEqual(ISO8601DurationStr, "PT0S")
     }
     
-    func test_toISO8601Duration_shouldDropZeroComponents_ifEmitZeroValuesIsTrue() {
+    func test_toISO8601Duration_shouldDropZeroComponents_ifOmitZeroValuesIsTrue() {
         let dateComponents = DateComponents(
             year: 0,
             month: 1,
@@ -89,12 +89,12 @@ final class DateComponentsTests: XCTestCase {
             second: 1,
             weekOfYear: 1
         )
-        let ISO8601DurationStr = dateComponents.toISO8601Duration(emitZeroOrNilValues: true)
+        let ISO8601DurationStr = dateComponents.toISO8601Duration(omitZeroOrNilValues: true)
         
         XCTAssertEqual(ISO8601DurationStr, "P1M1W1DT1H1M1S")
     }
     
-    func test_toISO8601Duration_shouldDropZeroComponents_ifEmitZeroValuesIsTrueAndAComponentIsNil() {
+    func test_toISO8601Duration_shouldDropZeroComponents_ifOmitZeroValuesIsTrueAndAComponentIsNil() {
         let dateComponents = DateComponents(
             year: nil,
             month: 1,
@@ -104,12 +104,12 @@ final class DateComponentsTests: XCTestCase {
             second: 1,
             weekOfYear: 1
         )
-        let ISO8601DurationStr = dateComponents.toISO8601Duration(emitZeroOrNilValues: true)
+        let ISO8601DurationStr = dateComponents.toISO8601Duration(omitZeroOrNilValues: true)
         
         XCTAssertEqual(ISO8601DurationStr, "P1M1W1DT1H1M1S")
     }
     
-    func test_toISO8601Duration_shouldDropTimeComponents_ifEmitZeroValuesIsTrueAndAllTimeComponentsAreZero() {
+    func test_toISO8601Duration_shouldDropTimeComponents_ifOmitZeroValuesIsTrueAndAllTimeComponentsAreZero() {
         let dateComponents = DateComponents(
             year: 1,
             month: 1,
@@ -119,12 +119,12 @@ final class DateComponentsTests: XCTestCase {
             second: 0,
             weekOfYear: 1
         )
-        let ISO8601DurationStr = dateComponents.toISO8601Duration(emitZeroOrNilValues: true)
+        let ISO8601DurationStr = dateComponents.toISO8601Duration(omitZeroOrNilValues: true)
         
         XCTAssertEqual(ISO8601DurationStr, "P1Y1M1W1D")
     }
     
-    func test_toISO8601Duration_shouldDropTimeComponents_ifEmitZeroValuesIsTrueAndAllTimeComponentsAreNil() {
+    func test_toISO8601Duration_shouldDropTimeComponents_ifOmitZeroValuesIsTrueAndAllTimeComponentsAreNil() {
         let dateComponents = DateComponents(
             year: 1,
             month: 1,
@@ -134,7 +134,7 @@ final class DateComponentsTests: XCTestCase {
             second: nil,
             weekOfYear: 1
         )
-        let ISO8601DurationStr = dateComponents.toISO8601Duration(emitZeroOrNilValues: true)
+        let ISO8601DurationStr = dateComponents.toISO8601Duration(omitZeroOrNilValues: true)
         
         XCTAssertEqual(ISO8601DurationStr, "P1Y1M1W1D")
     }
