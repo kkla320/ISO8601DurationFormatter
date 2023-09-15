@@ -25,22 +25,22 @@ extension DateComponents {
     /// let ISO8601DurationString = dateComponents.toISO8601Duration()
     /// print(ISO8601DurationString) // P6Y2M2W2DT4H44M22S
     /// ```
-    /// - Parameter omitZeroValues: Defines if zero or nil values should be excluded from the resulting string
+    /// - Parameter emitZeroValues: Defines if zero or nil values should be excluded from the resulting string
     /// - Returns: A [String](https://developer.apple.com/documentation/swift/string) object [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format using the current instance of [DateComponents](https://developer.apple.com/documentation/foundation/datecomponents)
-    public func toISO8601Duration(omitZeroOrNilValues: Bool = false) -> String {
-        if allComponentsZeroOrNil && omitZeroOrNilValues {
+    public func toISO8601Duration(emitZeroOrNilValues: Bool = false) -> String {
+        if allComponentsZeroOrNil && emitZeroOrNilValues {
             return "PT0S"
         }
         var result = "P"
-        result.append(year ?? 0, suffix: "Y", omitZeroValues: omitZeroOrNilValues)
-        result.append(month ?? 0, suffix: "M", omitZeroValues: omitZeroOrNilValues)
-        result.append(weekOfYear ?? 0, suffix: "W", omitZeroValues: omitZeroOrNilValues)
-        result.append(day ?? 0, suffix: "D", omitZeroValues: omitZeroOrNilValues)
-        if !allTimeComponentsZeroOrNil || !omitZeroOrNilValues {
+        result.append(year ?? 0, suffix: "Y", emitZeroValues: emitZeroOrNilValues)
+        result.append(month ?? 0, suffix: "M", emitZeroValues: emitZeroOrNilValues)
+        result.append(weekOfYear ?? 0, suffix: "W", emitZeroValues: emitZeroOrNilValues)
+        result.append(day ?? 0, suffix: "D", emitZeroValues: emitZeroOrNilValues)
+        if !allTimeComponentsZeroOrNil || !emitZeroOrNilValues {
             result.append("T")
-            result.append(hour ?? 0, suffix: "H", omitZeroValues: omitZeroOrNilValues)
-            result.append(minute ?? 0, suffix: "M", omitZeroValues: omitZeroOrNilValues)
-            result.append(second ?? 0, suffix: "S", omitZeroValues: omitZeroOrNilValues)
+            result.append(hour ?? 0, suffix: "H", emitZeroValues: emitZeroOrNilValues)
+            result.append(minute ?? 0, suffix: "M", emitZeroValues: emitZeroOrNilValues)
+            result.append(second ?? 0, suffix: "S", emitZeroValues: emitZeroOrNilValues)
         }
         return result
     }
